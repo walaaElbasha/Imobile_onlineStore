@@ -1,23 +1,134 @@
 var express = require('express');
 var router = express.Router();
+var multer  = require('multer');
+var upload = multer();
+const { check, validationResult } = require('express-validator');
+const passport = require('passport');
+var express = require('express');
+var router = express.Router();
 
 const Product = require('../models/Product');
 // const Cart = require('../../models/Cart');
- const Order = require('../models/Order') ;
-
- const { check, validationResult } = require('express-validator');
- const mongoose = require('mongoose') ;
+const Order = require('../models/Order');
 
 
+const mongoose = require('mongoose');
 
-
-mongoose.connect('mongodb://localhost/Shopping-cart' ,{useNewUrlParser : true} ,(error)=>{
-  if(error){
-    console.log(error)
-  }else{
-    console.log('Connecting to insert into db .....')
-  }
+mongoose.connect('mongodb://localhost/Shopping-cart', { useNewUrlParser: true }, (error) => {
+    if (error) {
+        console.log(error)
+    } else {
+        console.log('Connecting to insert into db .....')
+    }
 })
+
+router.get('/signin', isNotSignin, (req, res, next) => {
+    var massagesError = req.flash('signupError')
+    res.render('./admin/signin', { massages: massagesError });
+})
+router.post('/signin', [check('email').not().isEmpty().withMessage('please enter your email'),
+check('email').isEmail().withMessage('please enter valid email'),
+check('password').not().isEmpty().withMessage('please enter your password'),
+
+check('confirm-password').custom((value, { req }) => {
+    if (value !== req.body.password) {
+        throw new Error('password or mail are not correct')
+    } return true;
+})], (req, res, next) => {
+    const errors = validationResult(req);
+    var validationMassages = [];
+    for (var i = 0; i < errors.errors.length; i++) {
+        validationMassages.push(errors.errors[i].msg)
+    } var username = req.body.email;
+    var password = req.body.password;
+    if (username == 'admin@gmail.com') {
+        if (password == "admin") {
+            req.session.user = { username: username, password: password }
+            res.redirect('./profileadmin');
+        }
+        else {
+            req.flash('signupError', validationMassages);
+            console.log("password not excits")
+            res.redirect('./signin');
+        }
+    } else {
+        req.flash('signupError', validationMassages);
+        console.log("email not excits")
+        res.redirect('./signin');
+    }
+})
+
+
+router.get('/profileadmin', function(req, res, next) {
+
+    const successMas = req.flash('success')[0];
+
+    var totalProducts = null;
+
+    Product.find({}, (error, doc) => {
+        if (error) {
+            console.log(error)
+        }
+        var productGrid = [];
+        var colGrid = 3;
+
+        for (var i = 0; i < doc.length; i += colGrid) {
+            productGrid.push(doc.slice(i, i + colGrid))
+        }
+        res.render('admin/profileadmin', {
+            title: 'Shopping-cart',
+            products: productGrid,
+            checkuser: req.isAuthenticated(),
+            totalProducts: totalProducts,
+            successMas: successMas,
+        });
+    })
+
+})
+router.get('/editproductdescription/:id', function(req, res) {
+    console.log(req.params.id);
+    // console.log(product);
+    Product.findById(req.params.id, function(err, product) {
+        console.log(req.params.id);
+        console.log(product);
+        var product = product;
+        if (err)
+            return console.log(err);
+        res.render('admin/editproductdescription', {
+            title: 'Shopping-cart',
+            product: product
+
+        });
+    });
+});
+router.post('/editproductdescription/:id', function(req, res) {
+    var price = req.body.price;
+    var id = req.params.body;
+    if (errors) {
+
+        req.session.errors = errors;
+        res.redirect('/admin/editproductdescription');
+        console.log("error");
+    }
+    console.log("enter");
+
+});
+
+function isSignin(req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.redirect('signinadmin')
+        return;
+    }
+    next();
+}
+
+function isNotSignin(req, res, next) {
+    if (req.isAuthenticated()) {
+        res.redirect('/')
+        return;
+    }
+    next(); //5osh 3ala el call back fn
+}
 
 
 router.get('/orders' , (req , res , next)=>{
@@ -61,115 +172,7 @@ router.get('/addproduct' , (req , res , next)=>{
 });
 
 
-
-/*
- * POST add product
- */
-// router.post('/addproduct', function (req, res) {
-
-//  //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
-
-//     req.checkBody('pname', 'Name must have a value.').notEmpty();
-//     req.checkBody('pstorage', 'Storage Capacity must have a value.').notEmpty();
-//     req.checkBody('pprice', 'Price must have a value.').isDecimal();
-//     req.checkBody('presolution', 'Resolution must have a value.').notEmpty();
-//     req.checkBody('psize', 'display size must have a value.').notEmpty();
-//    // req.checkBody('image', 'You must upload an image').isImage(imageFile);
-
-//     // Apple iPhone X
-//     // Storage Capacity : 64 GB
-//     // Number Of SIM : Dual SIM
-//     // Rear Camera Resolution : 12 MP
-//     // Display Size (Inch) : 5.5 Inch
-
-//     var pname = req.body.pname;
-//     var slug = pname.replace(/\s+/g, '-').toLowerCase();
-//     var pstorage = req.body.pstorage;
-//     var pprice = req.body.pprice;
-//     var presolution = req.body.presolution;
-//     var psize = req.body.psize;
-
-//     var errors = req.validationErrors();
-
-//     if (errors) {
-        
-//         res.render('admin/add_product', {
-//             errors: errors,
-//             pname:pname,
-//             pstorage:pstorage,
-//             pprice:pprice,
-//             presolution:presolution,
-//             psize:psize,
-//         });
-   
-//     } else {
-//         Product.findOne({pname: pname}, function (err, product) {
-//             if (product) {
-//                 req.flash('danger', 'Product name exists, choose another.');
-             
-//                     res.render('admin/add_product', {
-//                         pname:pname,
-//                         pstorage:pstorage,
-//                         pprice:pprice,
-//                         presolution:presolution,
-//                         psize:psize,
-//                     });
-               
-//             } else {
-
-//                 var price2 = parseFloat(pprice).toFixed(2);
-
-//                 var product = new Product({
-//                     pname:pname,
-//                     pstorage:pstorage,
-//                     pprice:pprice,
-//                     presolution:presolution,
-//                     psize:psize,
-//                   //  image: imageFile
-//                 });
-
-//                 product.save(function (err) {
-//                     if (err)
-//                         return console.log(err);
-
-//                     mkdirp('public/product_images/' + product._id, function (err) {
-//                         return console.log(err);
-//                     });
-
-//                     mkdirp('public/product_images/' + product._id + '/gallery', function (err) {
-//                         return console.log(err);
-//                     });
-
-//                     mkdirp('public/product_images/' + product._id + '/gallery/thumbs', function (err) {
-//                         return console.log(err);
-//                     });
-
-//                     // if (imageFile != "") {
-//                     //     var productImage = req.files.image;
-//                     //     var path = 'public/product_images/' + product._id + '/' + imageFile;
-
-//                     //     productImage.mv(path, function (err) {
-//                     //         return console.log(err);
-//                     //     });
-//                     // }
-
-//                     req.flash('success', 'Product added!');
-//                     res.redirect('/'); /***************************mo2qtn */
-//                 });
-//             }
-//         });
-//     }
-
-// });
-
-
-
-
-
-
-
-
-router.post('/addproduct', [
+router.post('/addproduct', upload.none(), [
  //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
     check('pname').not().isEmpty().withMessage( 'Name must have a value.'),
     check('pstorage').not().isEmpty().withMessage( 'Storage Capacity must have a value.'),
@@ -184,16 +187,17 @@ router.post('/addproduct', [
 ], (req, res, next) => {
 
     var pname = req.body.pname;
-    var slug = pname.replace(/\s+/g, '-').toLowerCase();
+    //var slug = pname.replace(/\s+/g, '-').toLowerCase();
     var pstorage = req.body.pstorage;
     var pprice = req.body.pprice;
     var presolution = req.body.presolution;
     var psize = req.body.psize;
     var pnum= req.body.pnum;
+    console.log("PRODUCT NAME IS:" +req.body.pname);
+    console.log("*************************************************");
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-
 
          var validationMassages = [];
         for (var i = 0; i < errors.errors.length; i++) {
@@ -253,52 +257,10 @@ for( var i = 0 ; i < products.length ; i++){
 }
 
 
-req.flash('success', 'Product added!');
-//res.redirect('/');
-    
-
-    
-
-       /// mongoose.disconnect();
-        
+//req.flash('success', 'Product added!');
   
 
-    }//end else
-       // req.flash('success', 'Product added!');
-        //res.redirect('/');
-     //  return;
-      /*  product.save(function (err) {
-            if (err)
-                return console.log(err);
-
-            mkdirp('public/product_images/' + product._id, function (err) {
-                return console.log(err);
-            });
-
-            mkdirp('public/product_images/' + product._id + '/gallery', function (err) {
-                return console.log(err);
-            });
-
-            mkdirp('public/product_images/' + product._id + '/gallery/thumbs', function (err) {
-                return console.log(err);
-            });
-
-            // if (imageFile != "") {
-            //     var productImage = req.files.image;
-            //     var path = 'public/product_images/' + product._id + '/' + imageFile;
-
-            //     productImage.mv(path, function (err) {
-            //         return console.log(err);
-            //     });
-            // }
-
-            req.flash('success', 'Product added!');
-            res.redirect('/'); /***************************mo2qtn 
-        });*/
-    
+    }
 });
 
-
-
 module.exports = router;
-

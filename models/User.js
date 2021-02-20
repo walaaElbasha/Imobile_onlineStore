@@ -27,7 +27,9 @@ const userSchema = mongoose.Schema({
     image: {
         type: String,
         default: "/upload/avatar.jpg"
-    }
+    },
+
+
 })
 
 userSchema.methods.hashPassword = function(password) { //bfok el hash bt3 el passowrd 

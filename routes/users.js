@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 
+
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
 const passport = require('passport');
@@ -137,18 +138,21 @@ router.get('/profile', isSignin, (req, res, next) => {
 })
 
 
+
+
 router.get('/signin', isNotSignin, (req, res, next) => {
     var massagesError = req.flash('signinError');
     res.render('user/signin', { massages: massagesError, token: req.csrfToken() });
 })
 
 router.post('/signin', [
-    // check('email').not().isEmpty().withMessage('please enter your email'),
-    // check('email').isEmail().withMessage('please enter valid email'),
-    // check('password').not().isEmpty().withMessage('please enter your password'),
-    // check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
+    check('email').not().isEmpty().withMessage('please enter your email'),
+    check('email').isEmail().withMessage('please enter valid email'),
+    check('password').not().isEmpty().withMessage('please enter your password'),
+    check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
 
 ], (req, res, next) => {
+
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

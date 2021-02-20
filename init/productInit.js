@@ -129,7 +129,7 @@ for( var i = 0 ; i < products.length ; i++){
         console.log(doc)
         done ++
         if(done === products.length) { 
-          //  mongoose.disconnect();
+            mongoose.disconnect();
         }
     })
 }

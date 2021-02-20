@@ -1,9 +1,11 @@
 
+
 <h2 class="page-title">Add a product</h2>
-<a href="/admin/products" class="btn btn-primary">Back to all products</a>
+<a href="/admin/profileadmin" class="btn btn-primary">Back to all products</a>
 <br><br>
 
-<form method="post" action="/admin/addproduct" enctype="multipart/form-data">
+<form method="post" action="/admin/addproduct" >
+
     <div class="displayErrors">
         {{#each errors}}
     <div class="alert alert-danger">

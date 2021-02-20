@@ -7,19 +7,17 @@
     {{/each}}
 <form action="signin" method="post">
     <div class="form-group">
-        <label for="email">email</label>
+        <label for="email">Email</label>
         <input type="email" name="email" placeholder="Enter your Email" class="form-control">
     </div>
     <div class="form-group">
-        <label for="password">password</label>
+        <label for="password">Password</label>
         <input type="password" name="password" placeholder="Enter your password" class="form-control">
     </div>
-
-    <div class="form-group">
-       <label for="password">Admin code</label>
-        <input class="form-control" type="text" name="adminCode" placeholder="Admin code">
-         </div>
+ 
+       
     <input type="hidden" name="_csrf" value="{{token}}" >
-    <button type="submit" class="btn btn-primary">signin</button>
+    <button type="submit" class="btn btn-primary ">sign in</button></br>
+    <span class="pull-right">Don't have an account? Please <a href="/users/signup">Sign up</a></span>
 </form>
 </div>
