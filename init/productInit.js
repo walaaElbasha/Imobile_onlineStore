@@ -5,12 +5,10 @@ const mongoose = require('mongoose') ;
 
 
 
- mongoose.connect("mongodb://localhost/Shopping-cart" ,{useNewUrlParser : true} ,(error)=>{
-   if(error){
-    console.log("hii");
+mongoose.connect('mongodb://localhost/Shopping-cart' ,{useNewUrlParser : true} ,(error)=>{
+  if(error){
     console.log(error)
   }else{
-    console.log("hhhh");
     console.log('Connecting to DB .....')
   }
 })
@@ -18,9 +16,9 @@ const mongoose = require('mongoose') ;
 
 const products = [  new Product({
 
-    imagePath: "/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" ,
+    imagePath: '/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg' ,
 
-    productName: "Huawei Y9" ,
+    productName: 'Huawei Y9' ,
 
     information: {
         storageCapacity: 64 ,
