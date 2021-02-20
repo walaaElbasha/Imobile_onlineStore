@@ -24,29 +24,31 @@ mongoose.connect('mongodb://localhost/Shopping-cart', { useNewUrlParser: true },
 
 router.get('/signin', isNotSignin, (req, res, next) => {
     var massagesError = req.flash('signupError')
-    res.render('./admin/signin', { massages: massagesError });
+    res.render('./admin/signin', { massages: massagesError, layout: 'layoutadmin', checkuser: true, checkprofile: false });
 })
 router.post('/signin', [check('email').not().isEmpty().withMessage('please enter your email'),
-check('email').isEmail().withMessage('please enter valid email'),
-check('password').not().isEmpty().withMessage('please enter your password'),
+    check('email').isEmail().withMessage('please enter valid email'),
+    check('password').not().isEmpty().withMessage('please enter your password'),
 
-check('confirm-password').custom((value, { req }) => {
-    if (value !== req.body.password) {
-        throw new Error('password or mail are not correct')
-    } return true;
-})], (req, res, next) => {
+    check('confirm-password').custom((value, { req }) => {
+        if (value !== req.body.password) {
+            throw new Error('password or mail are not correct')
+        }
+        return true;
+    })
+], (req, res, next) => {
     const errors = validationResult(req);
     var validationMassages = [];
     for (var i = 0; i < errors.errors.length; i++) {
         validationMassages.push(errors.errors[i].msg)
-    } var username = req.body.email;
+    }
+    var username = req.body.email;
     var password = req.body.password;
     if (username == 'admin@gmail.com') {
         if (password == "admin") {
             req.session.user = { username: username, password: password }
             res.redirect('./profileadmin');
-        }
-        else {
+        } else {
             req.flash('signupError', validationMassages);
             console.log("password not excits")
             res.redirect('./signin');
@@ -59,7 +61,7 @@ check('confirm-password').custom((value, { req }) => {
 })
 
 
-router.get('/profileadmin', function (req, res, next) {
+router.get('/profileadmin', function(req, res, next) {
 
     const successMas = req.flash('success')[0];
 
@@ -78,17 +80,19 @@ router.get('/profileadmin', function (req, res, next) {
         res.render('admin/profileadmin', {
             title: 'Shopping-cart',
             products: productGrid,
-            checkuser: req.isAuthenticated(),
+            checkuser: true,
+            checkprofile: true,
             totalProducts: totalProducts,
             successMas: successMas,
+            layout: 'layoutadmin',
         });
     })
 
 })
-router.get('/editproductdescription/:id', function (req, res) {
+router.get('/editproductdescription/:id', function(req, res) {
     console.log(req.params.id);
     // console.log(product);
-    Product.findById(req.params.id, function (err, product) {
+    Product.findById(req.params.id, function(err, product) {
         console.log(req.params.id);
         console.log(product);
         var product = product;
@@ -96,6 +100,9 @@ router.get('/editproductdescription/:id', function (req, res) {
             return console.log(err);
         res.render('admin/editproductdescription', {
             title: 'Shopping-cart',
+            layout: 'layoutadmin',
+            checkuser: true,
+            checkprofile: true,
             product: product
 
         });
@@ -106,7 +113,7 @@ router.get('/editproductdescription/:id', function (req, res) {
 router.post('/editproductdescription/:id', upload.none(), [
 
     check('price').not().isEmpty().withMessage('Price must have a value.'),
-    
+
 ], (req, res, next) => {
 
     var storage = req.body.title;
@@ -127,11 +134,11 @@ router.post('/editproductdescription/:id', upload.none(), [
         }
         res.render('admin/editproductdescription', {
             errors: validationMassages,
-    
+
         });
 
     } else {
-        Product.findById(id, function (err, p) {
+        Product.findById(id, function(err, p) {
             if (err)
                 console.log(err);
             // p.information.storageCapacity = parseFloat(storage);
@@ -143,15 +150,18 @@ router.post('/editproductdescription/:id', upload.none(), [
 
 
 
-            p.save((error , doc )=>{
-                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/n"+p)
-                if(error){
+            p.save((error, doc) => {
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/n" + p)
+                if (error) {
                     console.log(error)
                 }
                 console.log(doc)
+                req.flash('success', 'Product Edited!');
 
-                    //mongoose.disconnect();
-                }); 
+                res.redirect('/admin/profileadmin')
+
+                //mongoose.disconnect();
+            });
 
 
 
@@ -187,7 +197,7 @@ router.get('/orders', (req, res, next) => {
 
         console.log(result)
 
-        res.render('admin/orders', { usersOrders: result });
+        res.render('admin/orders', { usersOrders: result, layout: 'layoutadmin', checkuser: true, checkprofile: true });
     })
 })
 
@@ -208,7 +218,10 @@ router.get('/addproduct', (req, res, next) => {
         pprice: pprice,
         presolution: presolution,
         psize: psize,
-        pnum: pnum
+        pnum: pnum,
+        checkuser: true,
+        checkprofile: true,
+        layout: 'layoutadmin',
 
 
 
@@ -231,6 +244,14 @@ router.post('/addproduct', upload.none(), [
 
 
 ], (req, res, next) => {
+    // ************
+    var pimage=req.body.image;
+
+    console.log("image path IS:" + req.body.image);
+    console.log("type image path IS:" + typeof(req.body.image));
+
+    var pimagef='/images/'+req.body.image;
+    console.log("image path final IS:" + pimagef);
 
     var pname = req.body.pname;
     //var slug = pname.replace(/\s+/g, '-').toLowerCase();
@@ -253,12 +274,17 @@ router.post('/addproduct', upload.none(), [
 
         res.render('admin/add_product', {
             errors: validationMassages,
+            /*** */
+            pimagef:pimagef,
             pname: pname,
             pstorage: pstorage,
             pprice: pprice,
             presolution: presolution,
             psize: psize,
-            pnum: pnum
+            pnum: pnum,
+            checkuser: true,
+            checkprofile: true,
+            layout: 'layoutadmin',
 
         });
 
@@ -271,7 +297,7 @@ router.post('/addproduct', upload.none(), [
         var products = [new Product({
 
             //  imagePath: imageFile,
-
+            imagePath: pimagef,
             productName: pname,
 
             information: {
@@ -284,8 +310,7 @@ router.post('/addproduct', upload.none(), [
             },
 
             price: price2,
-        }),
-        ]
+        }), ]
 
         var done = 0;
 
@@ -297,7 +322,10 @@ router.post('/addproduct', upload.none(), [
                 console.log(doc)
                 done++
                 if (done === products.length) {
-                    mongoose.disconnect();
+                    //mongoose.disconnect();
+                req.flash('success', 'Product Added!');
+
+                res.redirect('/admin/profileadmin')
                 }
             })
         }
@@ -308,6 +336,11 @@ router.post('/addproduct', upload.none(), [
 
     }
 });
+router.get('/logout', isSignin, (req, res, next) => {
+    req.logOut();
+    res.redirect('/')
+
+})
 
 
 
