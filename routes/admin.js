@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var multer  = require('multer');
+var multer = require('multer');
 var upload = multer();
 const { check, validationResult } = require('express-validator');
 const passport = require('passport');
@@ -59,7 +59,7 @@ check('confirm-password').custom((value, { req }) => {
 })
 
 
-router.get('/profileadmin', function(req, res, next) {
+router.get('/profileadmin', function (req, res, next) {
 
     const successMas = req.flash('success')[0];
 
@@ -85,10 +85,10 @@ router.get('/profileadmin', function(req, res, next) {
     })
 
 })
-router.get('/editproductdescription/:id', function(req, res) {
+router.get('/editproductdescription/:id', function (req, res) {
     console.log(req.params.id);
     // console.log(product);
-    Product.findById(req.params.id, function(err, product) {
+    Product.findById(req.params.id, function (err, product) {
         console.log(req.params.id);
         console.log(product);
         var product = product;
@@ -101,22 +101,69 @@ router.get('/editproductdescription/:id', function(req, res) {
         });
     });
 });
-router.post('/editproductdescription/:id', function(req, res) {
-    var price = req.body.price;
-    var id = req.params.body;
-    if (errors) {
 
-        req.session.errors = errors;
-        res.redirect('/admin/editproductdescription');
-        console.log("error");
+
+router.post('/editproductdescription/:id', upload.none(), [
+
+    check('price').not().isEmpty().withMessage('Price must have a value.'),
+    
+], (req, res, next) => {
+
+    var storage = req.body.title;
+
+    var camera = req.body.camera;
+    var price = req.body.price;
+    var sim = req.body.sim;
+    var size = req.body.size;
+    console.log("EDITED SIZE-----------" + req.body.size);
+    var id = req.params.id;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+
+        var validationMassages = [];
+        for (var i = 0; i < errors.errors.length; i++) {
+            validationMassages.push(errors.errors[i].msg)
+        }
+        res.render('admin/editproductdescription', {
+            errors: validationMassages,
+    
+        });
+
+    } else {
+        Product.findById(id, function (err, p) {
+            if (err)
+                console.log(err);
+            // p.information.storageCapacity = parseFloat(storage);
+            // p.information.cameraResolution = parseFloat(camera);
+            // p.information.numberOfSIM = sim;
+            // p.information.displaySize = parseFloat(size);
+            p.price = parseFloat(price);
+
+
+
+
+            p.save((error , doc )=>{
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/n"+p)
+                if(error){
+                    console.log(error)
+                }
+                console.log(doc)
+
+                    //mongoose.disconnect();
+                }); 
+
+
+
+        });
     }
-    console.log("enter");
+
 
 });
 
 function isSignin(req, res, next) {
     if (!req.isAuthenticated()) {
-        res.redirect('signinadmin')
+        res.redirect('signin')
         return;
     }
     next();
@@ -131,59 +178,58 @@ function isNotSignin(req, res, next) {
 }
 
 
-router.get('/orders' , (req , res , next)=>{
+router.get('/orders', (req, res, next) => {
 
-    Order.find( (err,result)=>{
-        if(err){    
-            console.log(err)}
-    
-            console.log(result)
+    Order.find((err, result) => {
+        if (err) {
+            console.log(err)
+        }
 
-       res.render('admin/orders',{usersOrders: result});
+        console.log(result)
 
-
-     })
+        res.render('admin/orders', { usersOrders: result });
+    })
 })
 
-router.get('/addproduct' , (req , res , next)=>{
+router.get('/addproduct', (req, res, next) => {
     var pname = "";
     var pstorage = "";
     var pprice = "";
-    var presolution ="";
-    var psize ="";
-    var pnum= "";
-    var errors ="";
+    var presolution = "";
+    var psize = "";
+    var pnum = "";
+    var errors = "";
 
-    res.render('admin/add_product' , {
-        errors:errors,
+    res.render('admin/add_product', {
+        errors: errors,
 
-        pname:pname,
-        pstorage:pstorage,
-        pprice:pprice,
-        presolution:presolution,
-        psize:psize,
-        pnum :pnum
-    
-    
-    
-});
-  
+        pname: pname,
+        pstorage: pstorage,
+        pprice: pprice,
+        presolution: presolution,
+        psize: psize,
+        pnum: pnum
+
+
+
+    });
+
 
 });
 
 
 router.post('/addproduct', upload.none(), [
- //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
-    check('pname').not().isEmpty().withMessage( 'Name must have a value.'),
-    check('pstorage').not().isEmpty().withMessage( 'Storage Capacity must have a value.'),
+    //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+    check('pname').not().isEmpty().withMessage('Name must have a value.'),
+    check('pstorage').not().isEmpty().withMessage('Storage Capacity must have a value.'),
     check('pprice').not().isEmpty().withMessage('Price must have a value.'),
     check('presolution').not().isEmpty().withMessage('Resolution must have a value.'),
-    check('psize').not().isEmpty().withMessage( 'display size must have a value.'),
-    check('pnum').not().isEmpty().withMessage( 'display size must have a value.'),
+    check('psize').not().isEmpty().withMessage('display size must have a value.'),
+    check('pnum').not().isEmpty().withMessage('Number of SIM must have a value.'),
     // req.checkBody('image', 'You must upload an image').isImage(imageFile);
 
-   
-  
+
+
 ], (req, res, next) => {
 
     var pname = req.body.pname;
@@ -192,75 +238,78 @@ router.post('/addproduct', upload.none(), [
     var pprice = req.body.pprice;
     var presolution = req.body.presolution;
     var psize = req.body.psize;
-    var pnum= req.body.pnum;
-    console.log("PRODUCT NAME IS:" +req.body.pname);
+    var pnum = req.body.pnum;
+    console.log("PRODUCT NAME IS:" + req.body.pname);
     console.log("*************************************************");
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
 
-         var validationMassages = [];
+        var validationMassages = [];
         for (var i = 0; i < errors.errors.length; i++) {
-          validationMassages.push(errors.errors[i].msg)
+            validationMassages.push(errors.errors[i].msg)
         }
-  
+
 
         res.render('admin/add_product', {
-            errors:validationMassages,
-            pname:pname,
-            pstorage:pstorage,
-            pprice:pprice,
-            presolution:presolution,
-            psize:psize,
-            pnum:pnum
-            
+            errors: validationMassages,
+            pname: pname,
+            pstorage: pstorage,
+            pprice: pprice,
+            presolution: presolution,
+            psize: psize,
+            pnum: pnum
+
         });
 
-        
-       // return;
+
+        // return;
     } else {
-                       //lessa 3yza a check if already exists
+        //lessa 3yza a check if already exists
         var price2 = parseFloat(pprice).toFixed(2);
 
-        var products=[ new Product({
+        var products = [new Product({
 
-          //  imagePath: imageFile,
-        
-            productName:pname ,
-        
+            //  imagePath: imageFile,
+
+            productName: pname,
+
             information: {
-                storageCapacity: pstorage ,
-                numberOfSIM: pnum , 
-                cameraResolution: presolution, 
-                displaySize : psize ,
-                
-        
-            } ,
-        
-            price: price2 ,
+                storageCapacity: pstorage,
+                numberOfSIM: pnum,
+                cameraResolution: presolution,
+                displaySize: psize,
+
+
+            },
+
+            price: price2,
         }),
-    ]
+        ]
 
-        var done = 0 ;
+        var done = 0;
 
-for( var i = 0 ; i < products.length ; i++){
-    products[i].save((error , doc)=>{
-        if(error){
-            console.log(error)
+        for (var i = 0; i < products.length; i++) {
+            products[i].save((error, doc) => {
+                if (error) {
+                    console.log(error)
+                }
+                console.log(doc)
+                done++
+                if (done === products.length) {
+                    mongoose.disconnect();
+                }
+            })
         }
-        console.log(doc)
-        done ++
-        if(done === products.length) { 
-            mongoose.disconnect();
-        }
-    })
-}
 
 
-//req.flash('success', 'Product added!');
-  
+        //req.flash('success', 'Product added!');
+
 
     }
 });
+
+
+
 
 module.exports = router;

@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost/Shopping-cart' ,{useNewUrlParser : true} ,
 })
 
 
-const products = [  new Product({
+var products = [  new Product({
 
     imagePath: '/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg' ,
 

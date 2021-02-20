@@ -9,11 +9,11 @@ const productSchema = mongoose.Schema({
 
     productName: {
         type: String,
-        required: true
+        required: false
     },
 
     information: {
-        require: true,
+        require: false,
 
         type: {
 
