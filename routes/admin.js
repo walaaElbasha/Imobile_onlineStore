@@ -63,8 +63,12 @@ router.post('/signin', [check('email').not().isEmpty().withMessage('please ente
 
 router.get('/profileadmin', function(req, res, next) {
 
-    const successMas = req.flash('success')[0];
+    if (!req.session.user && !req.cookies.user_sid) {
+        res.redirect('/admin/signin');
+    }
+    else {
 
+    const successMas = req.flash('success')[0];
     var totalProducts = null;
 
     Product.find({}, (error, doc) => {
@@ -88,8 +92,15 @@ router.get('/profileadmin', function(req, res, next) {
         });
     })
 
+
+
+}
 })
 router.get('/editproductdescription/:id', function(req, res) {
+    if (!req.session.user && !req.cookies.user_sid) {
+        res.redirect('/admin/signin');
+    }
+    else {
     console.log(req.params.id);
     // console.log(product);
     Product.findById(req.params.id, function(err, product) {
@@ -107,6 +118,8 @@ router.get('/editproductdescription/:id', function(req, res) {
 
         });
     });
+
+}
 });
 
 
@@ -189,7 +202,10 @@ function isNotSignin(req, res, next) {
 
 
 router.get('/orders', (req, res, next) => {
-
+    if (!req.session.user && !req.cookies.user_sid) {
+        res.redirect('/admin/signin');
+    }
+    else {
     Order.find((err, result) => {
         if (err) {
             console.log(err)
@@ -199,9 +215,14 @@ router.get('/orders', (req, res, next) => {
 
         res.render('admin/orders', { usersOrders: result, layout: 'layoutadmin', checkuser: true, checkprofile: true });
     })
+}
 })
 
 router.get('/addproduct', (req, res, next) => {
+    if (!req.session.user && !req.cookies.user_sid) {
+        res.redirect('/admin/signin');
+    }
+    else {
     var pname = "";
     var pstorage = "";
     var pprice = "";
@@ -226,7 +247,7 @@ router.get('/addproduct', (req, res, next) => {
 
 
     });
-
+}
 
 });
 
