@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const mongoose = require('mongoose');
 //const expressHbs = require('express-handlebars');
-
+// var auth=require('./routes/admin')
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
@@ -16,6 +16,7 @@ var app = express();
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
 var adminRouter = require('./routes/admin');
+// var  editproductdescription = require('../admin/editproductdescription');
 
 
 mongoose.connect('mongodb://localhost/Shopping-cart', { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, (error) => {
@@ -65,6 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/admin', adminRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
@@ -82,7 +84,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-var port = 3000;
+var port = 4000;
 app.listen(port, function() {
     console.log('server started on port ' + port);
 });

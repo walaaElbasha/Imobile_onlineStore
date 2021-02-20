@@ -31,18 +31,21 @@
         </p>
         <div>
           <div class="price float-left"> $ {{this.price}}</div>
-          {{#if ../../checkuser}}
-          {{!-- <a href="/addTocart/{{this._id}}/{{this.price}}/{{this.productName}}"
-            class="btn  btn-success float-right">edit</a> --}}
-            <button type="button" class="btn  btn-success float-right" data-toggle="modal" data-target="#exampleModalCenter">
+          {{!-- {{#if ../../checkuser}} --}}
+          <a href="/admin/editproductdescription/{{this._id}}"
+            class="btn  btn-success float-right">edit</a>  
+           {{!-- <button type="button" class="btn  btn-success float-right" data-toggle="modal" data-target="#exampleModalCenter">
             Edit
-          </button>
+          </button> --}}
          
           {{!-- add to object in database 
-          new product { n7ot al kyam feh }-- --}}
-          {{else}}
+          new product { n7ot al kyam feh 
           
-          {{/if}}
+          
+          }-- --}}
+          {{!-- {{else}}
+          
+          {{/if}} --}}
 
         </div>
       </div>

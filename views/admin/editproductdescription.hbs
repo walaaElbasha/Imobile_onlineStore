@@ -1,0 +1,81 @@
+<h1> Edit product description</h1>
+
+
+{{!-- {{#each products}}
+{{#each this}}
+{{this.imagePath}}
+{{/each}}
+{{/each}} --}}
+{{!-- for={{this.productName}}
+for={{this.price}} --}}
+{{product}}
+<h5> {{product.price}} </h5>
+<script>
+
+  function myFunction() {
+    var x = document.getElementById("price").innerHTML;
+  }
+    /*db.Product.update(
+      { "product._id": product._id  }, 
+    {$set: { "product.price" : x}}) */
+     
+    // var x = document.getElementById("price").defaultValue; 
+    
+    
+ 
+  
+</script>
+{{!-- {{this.price}}
+<h5>{{req.params.id}}</h5>
+<h5>{{this._id}}</h5> --}}
+<div class="form-group">
+  <label for="text">Image Path</label>
+  <input type="text" name="image Path" class="form-control" value={{product.imagePath}}>
+</div>
+
+<div class="form-group">
+  <label for="text">price</label>
+  <input type="text" name="price" id="price" class="form-control" value={{product.price}}>
+</div>
+
+{{!--
+Storage Capacity : {{this.information.storageCapacity}} GB <br>
+Number Of SIM : {{this.information.numberOfSIM}} <br>
+Rear Camera Resolution : {{this.information.cameraResolution}} MP <br>
+Display Size (Inch) : {{this.information.displaySize}} Inch --}}
+<div class="form-group">
+  <label for="text">information</label>
+  <div>
+    Storage Capacity :<input type="text" name="storage" id="storage" class="form-control"
+      value={{product.information.storageCapacity}}>
+    Number Of SIM :<input type="text" name="sim" id="sim" class="form-control"
+      value={{product.information.numberOfSIM}}>
+    Rear Camera Resolution :<input type="text" name="sim" id="sim" class="form-control"
+      value={{product.information.cameraResolution}}>
+    Display Size (Inch) :<input type="text" name="size" id="size" class="form-control"
+      value={{product.information.displaySize}}>
+
+  </div>
+</div>
+
+
+
+</div>
+
+{{!-- <div class="card-body">
+  <h5 class="card-title">{{this.productName}}</h5>
+  <p class="card-text">
+    Storage Capacity : {{this.information.storageCapacity}} GB <br>
+    Number Of SIM : {{this.information.numberOfSIM}} <br>
+    Rear Camera Resolution : {{this.information.cameraResolution}} MP <br>
+    Display Size (Inch) : {{this.information.displaySize}} Inch
+  </p>
+  <div> --}}
+
+    <inut type="hidden" name="_csrf" value="{{token}}">
+      <button type="submit" onclick="myFunction()" class="btn btn-primary">submit</button>
+
+      <h5>{{this._id}}</h5>
+      {{this._id}}
+      </form>
+  </div>
