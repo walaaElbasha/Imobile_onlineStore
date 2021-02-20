@@ -15,6 +15,8 @@ const expressHbs = require('express-handlebars');
 var app = express();
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
+var adminRouter = require('./routes/admin');
+
 
 mongoose.connect('mongodb://localhost/Shopping-cart', { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, (error) => {
     if (error) {
@@ -62,7 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+app.use('/admin', adminRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
