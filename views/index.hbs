@@ -1,0 +1,195 @@
+{{!-- <h1>{{title}}</h1>
+<p>Welcome to {{title}}</p> --}}
+
+<!-- <div class="row">
+<div class="col-sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+    
+  </div>
+</div>
+</div>
+</div> -->
+
+<!--
+ <div class="row">
+    <div class="col -sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+          
+  </div>
+</div>
+    </div>
+
+    <div class="col -sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+  </div>
+</div>
+    </div>
+
+    <div class="col -sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+  </div>
+</div> 
+    </div>
+</div>
+
+<div class="row">
+    <div class="col -sm-4">
+
+
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+          
+  </div>
+</div>
+    </div>
+
+    <div class="col -sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+  </div>
+</div>
+    </div>
+
+    <div class="col -sm-4">
+<div class="card" >
+      <div class="text-center">
+  <img src="/images/Huawei Y9 2019 Dual SIM - 64GB, 4GB RAM, 4G LTE, Arabic Blue.jpg" class="card-img-top" alt="...">
+       </div>
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="price float-left"> $200</div>
+    {{!-- <a href="#" class="btn btn-primary">Go somewhere</a> --}}
+   
+    <button type="button" class="btn  btn-success float-right">
+            Buy
+          </button>
+  </div>
+</div> 
+    </div>
+
+-->
+
+
+
+
+{{#if successMas}}
+
+<div class="alert alert-success text-center">
+    {{successMas}}
+</div>
+
+{{/if}}
+
+<h1>shooping</h1>
+{{!-- style="background-color: red; --}}
+
+ {{!-- {{#each products}} 
+{{#each this}} 
+<h5>{{this.imagePath}}</h5>
+ {{/each}} 
+  {{/each}}  --}}
+
+  {{#each products}} 
+<div class="row" >
+     {{#each this}} 
+  <div class="col-sm-4">
+        <div class="card">
+            <div class="text-center">
+                <img src="{{this.imagePath}}" class="card-img-top" alt="...">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{this.productName}}</h5>
+                <p class="card-text">
+                    Storage Capacity : {{this.information.storageCapacity}} GB <br>
+                    Number Of SIM : {{this.information.numberOfSIM}} <br>
+                    Rear Camera Resolution : {{this.information.cameraResolution}} MP <br>
+                    Display Size (Inch) : {{this.information.displaySize}} Inch
+                </p>
+                <div>
+                    <div class="price float-left"> $ {{this.price}}</div>
+                    {{!-- <a href="/addTocart/{{this._id}}/{{this.price}}/{{this.productName}}"
+                        class="btn  btn-success float-right">Buy</a> --}}
+                    {{!-- <button type="button" class="btn  btn-success float-right" >
+                        Buy
+                    </button> --}}
+                    <a href="#" class= "btn  btn-success float-right"> Buy</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{/each}} 
+</div>
+ {{/each}} 
