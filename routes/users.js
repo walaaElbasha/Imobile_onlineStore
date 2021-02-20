@@ -143,10 +143,10 @@ router.get('/signin', isNotSignin, (req, res, next) => {
 })
 
 router.post('/signin', [
-    check('email').not().isEmpty().withMessage('please enter your email'),
-    check('email').isEmail().withMessage('please enter valid email'),
-    check('password').not().isEmpty().withMessage('please enter your password'),
-    check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
+    // check('email').not().isEmpty().withMessage('please enter your email'),
+    // check('email').isEmail().withMessage('please enter valid email'),
+    // check('password').not().isEmpty().withMessage('please enter your password'),
+    // check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
 
 ], (req, res, next) => {
 

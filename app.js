@@ -11,12 +11,16 @@ const flash = require('connect-flash');
 const passport = require('passport');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var app = express(); ////////////////n2ltaha here
+/**************************************************************************************************/
+var expressValidator = require('express-validator');
+var admin = require('./routes/admin');
+var fileUpload = require('express-fileupload');
+/****************************************************************** */
 const expressHbs = require('express-handlebars');
-var app = express();
+///////////was here
 const Handlebars = require('handlebars')
 const { allowInsecurePrototypeAccess } = require('@handlebars/allow-prototype-access')
-var adminRouter = require('./routes/admin');
-
 
 mongoose.connect('mongodb://localhost/Shopping-cart', { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true }, (error) => {
     if (error) {
@@ -57,14 +61,17 @@ app.use(passport.initialize()); //2owl ma yowsl hena howa 7ibd2 ydmg men 2owl ma
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*************************************new*************** */
+// app.use(expressValidator()); 
 
-
-
-
-
+app.use(fileUpload());
+/******************************************************************* */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/admin', adminRouter);
+
+/****************by admin but still needs auth************************************************************ */
+app.use('/admin',admin);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
@@ -86,4 +93,38 @@ var port = 3000;
 app.listen(port, function() {
     console.log('server started on port ' + port);
 });
+
+// app.use(expressValidator({
+//     errorFormatter: function (param, msg, value) {
+//         var namespace = param.split('.')
+//                 , root = namespace.shift()
+//                 , formParam = root;
+
+//         while (namespace.length) {
+//             formParam += '[' + namespace.shift() + ']';
+//         }
+//         return {
+//             param: formParam,
+//             msg: msg,
+//             value: value
+//         };
+//     },
+//     customValidators: {
+//         isImage: function (value, filename) {
+//             var extension = (path.extname(filename)).toLowerCase();
+//             switch (extension) {
+//                 case '.jpg':
+//                     return '.jpg';
+//                 case '.jpeg':
+//                     return '.jpeg';
+//                 case '.png':
+//                     return '.png';
+//                 case '':
+//                     return '.jpg';
+//                 default:
+//                     return false;
+//             }
+//         }
+//     }
+// }));
 module.exports = app;

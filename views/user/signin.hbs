@@ -14,8 +14,12 @@
         <label for="password">password</label>
         <input type="password" name="password" placeholder="Enter your password" class="form-control">
     </div>
+
+    <div class="form-group">
+       <label for="password">Admin code</label>
+        <input class="form-control" type="text" name="adminCode" placeholder="Admin code">
+         </div>
     <input type="hidden" name="_csrf" value="{{token}}" >
-    <button type="submit" class="btn btn-primary">
-        Login</button>
+    <button type="submit" class="btn btn-primary">signin</button>
 </form>
 </div>

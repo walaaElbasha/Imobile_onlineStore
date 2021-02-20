@@ -1,0 +1,67 @@
+{{!-- {{usersOrders}}
+<h1> ---------------</h1>
+{{#each usersOrders as |val index|}}
+
+{{this.name}}
+
+ {{/each}}
+  --}}
+      <div  id="orders" role="tabpanel" aria-labelledby="profile-tab">
+        <div style="padding-top: 30px">
+
+          {{#each usersOrders as |val index|}}
+
+          <table class="table table-bordered">
+            <thead>
+              <tr class="table-active text-cenetr">
+
+                <td colspan="4" style="font-weight: bold" class="text-center "> Order Number {{add @index}} by {{this.name}}</td>
+              </tr>
+
+              <tr>
+                <th scope="col" class="text-center ">#</th>
+                <th scope="col" class="text-center ">Product Name</th>
+                <th scope="col" class="text-center ">Product Quantity</th>
+                <th scope="col" class="text-center ">Product Price</th>
+                 
+              </tr>
+            </thead>
+            <tbody>
+
+              {{#each this.cart.selectedProduct as |val indexProduct|}}
+              <tr>
+                <th scope="row" class="text-center ">{{add @indexProduct}}</th>
+                <td class="text-center ">{{this.name}}</td>
+                <td class="text-center ">{{this.quantity}}</td>
+                <td class="text-center ">{{this.price}}</td>
+                
+             
+              {{/each}}
+              
+            </tr>
+              <tr class="table-primary">
+                <td colspan="3" style="font-weight: bold">Total Price</td>
+                <td style="font-weight: bold" class="text-center "> $ {{this.orderPrice}}</td>
+              
+              </tr>
+
+                 </tr>
+              <tr class="table-primary">
+                <td colspan="3" style="font-weight: bold">Client's address</td>
+                <td style="font-weight: bold" class="text-center "> {{this.address}}</td>
+              
+              </tr>
+                  </tr>
+              <tr class="table-primary">
+                <td colspan="3" style="font-weight: bold">Phone Number</td>
+                <td style="font-weight: bold" class="text-center "> {{this.contact}}</td>
+              
+              </tr>
+
+            </tbody>
+          </table>
+
+          {{/each}}
+
+        </div>
+      </div>

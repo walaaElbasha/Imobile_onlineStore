@@ -1,234 +1,304 @@
-
-// var express = require('express');
-// var router = express.Router();
-
-// /* GET users listing. */
-// router.get('/signupadmin',/* isNotSignin, */function(req, res, next) {
-//     // var massagesError = req.flash('signupError')
-//     res.render('admin/signupadmin'/*, { massages: massagesError, token: req.csrfToken() }*/);
-// });
-
-
-// router.get('/signinadmin', /*isNotSignin,*/ (req, res, next) => {
-//     // var massagesError = req.flash('signinError');
-//     res.render('admin/signinadmin'/*, { massages: massagesError, token: req.csrfToken() }*/);
-// })
-
-
 var express = require('express');
 var router = express.Router();
+
 const Product = require('../models/Product');
+// const Cart = require('../../models/Cart');
+ const Order = require('../models/Order') ;
 
-const { check, validationResult } = require('express-validator');
-const admin= require('../models/admin');
-const passport = require('passport');
-// const fs = require('fs');
-// const fileFilter = function(req, file, cb) {
-//     if (file.mimetype === 'image/jpeg') {
-//         cb(null, true)
-//     } else {
-//         cb(new Error('please upload jpeg image'), false);
-//     }
-// }
+ const { check, validationResult } = require('express-validator');
+ const mongoose = require('mongoose') ;
 
-const csrf = require('csurf');
-// router.use(upload.single('myfile'), (err, req, res, next) => {
-//     if (err) {
-//         req.flash('profileImageError', [err.message]);
-//         res.redirect('profile');
-//     }
-// });
-router.use(csrf());
 
-/* GET users listing. */
-router.get('/signupadmin', isNotSignin, function(req, res, next) {
-    var massagesError = req.flash('signupError')
-    res.render('admin/signupadmin', { massages: massagesError, token: req.csrfToken() });
+
+
+mongoose.connect('mongodb://localhost/Shopping-cart' ,{useNewUrlParser : true} ,(error)=>{
+  if(error){
+    console.log(error)
+  }else{
+    console.log('Connecting to insert into db .....')
+  }
+})
+
+
+router.get('/orders' , (req , res , next)=>{
+
+    Order.find( (err,result)=>{
+        if(err){    
+            console.log(err)}
+    
+            console.log(result)
+
+       res.render('admin/orders',{usersOrders: result});
+
+
+     })
+})
+
+router.get('/addproduct' , (req , res , next)=>{
+    var pname = "";
+    var pstorage = "";
+    var pprice = "";
+    var presolution ="";
+    var psize ="";
+    var pnum= "";
+    var errors ="";
+
+    res.render('admin/add_product' , {
+        errors:errors,
+
+        pname:pname,
+        pstorage:pstorage,
+        pprice:pprice,
+        presolution:presolution,
+        psize:psize,
+        pnum :pnum
+    
+    
+    
+});
+  
+
 });
 
 
-router.get('/signinadmin', isNotSignin, (req, res, next) => {
-    var massagesError = req.flash('signinError');
-    res.render('admin/signinadmin', { massages: massagesError, token: req.csrfToken() });
-})
-router.post('/signupadmin', [
-    check('email').not().isEmpty().withMessage('please enter your email'),
-    check('email').isEmail().withMessage('please enter valid email'),
-    check('password').not().isEmpty().withMessage('please enter your password'),
-    check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
-    check('confirm-password').custom((value, { req }) => {
-        if (value !== req.body.password) {
-            throw new Error('password and confirm-password not matched')
-        }
-        return true;
-    })
-
-], (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-
-
-        var validationMassages = [];
-        for (var i = 0; i < errors.errors.length; i++) {
-            validationMassages.push(errors.errors[i].msg)
-        }
-
-        req.flash('signupError', validationMassages);
-        res.redirect('signupadmin')
-
-        return;
-    }
-    next();
-}, passport.authenticate('local-signup', {
-    session: false, //22fly el session
-    successRedirect: 'signinadmin', //ng7 el sign up ro7  llsign in 
-    failureRedirect: 'signupadmin', //fshl 5liky fy el sign up
-    failureMessage: true
-}))
 
 /*
-router.get('/profileadmin', isSignin, (req, res, next) => {
-    res.render('admin/profileadmin')
-})
-*/
-router.get('/profileadmin', function (req, res, next) {
+ * POST add product
+ */
+// router.post('/addproduct', function (req, res) {
 
-    const successMas = req.flash('success')[0];
+//  //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+
+//     req.checkBody('pname', 'Name must have a value.').notEmpty();
+//     req.checkBody('pstorage', 'Storage Capacity must have a value.').notEmpty();
+//     req.checkBody('pprice', 'Price must have a value.').isDecimal();
+//     req.checkBody('presolution', 'Resolution must have a value.').notEmpty();
+//     req.checkBody('psize', 'display size must have a value.').notEmpty();
+//    // req.checkBody('image', 'You must upload an image').isImage(imageFile);
+
+//     // Apple iPhone X
+//     // Storage Capacity : 64 GB
+//     // Number Of SIM : Dual SIM
+//     // Rear Camera Resolution : 12 MP
+//     // Display Size (Inch) : 5.5 Inch
+
+//     var pname = req.body.pname;
+//     var slug = pname.replace(/\s+/g, '-').toLowerCase();
+//     var pstorage = req.body.pstorage;
+//     var pprice = req.body.pprice;
+//     var presolution = req.body.presolution;
+//     var psize = req.body.psize;
+
+//     var errors = req.validationErrors();
+
+//     if (errors) {
+        
+//         res.render('admin/add_product', {
+//             errors: errors,
+//             pname:pname,
+//             pstorage:pstorage,
+//             pprice:pprice,
+//             presolution:presolution,
+//             psize:psize,
+//         });
+   
+//     } else {
+//         Product.findOne({pname: pname}, function (err, product) {
+//             if (product) {
+//                 req.flash('danger', 'Product name exists, choose another.');
+             
+//                     res.render('admin/add_product', {
+//                         pname:pname,
+//                         pstorage:pstorage,
+//                         pprice:pprice,
+//                         presolution:presolution,
+//                         psize:psize,
+//                     });
+               
+//             } else {
+
+//                 var price2 = parseFloat(pprice).toFixed(2);
+
+//                 var product = new Product({
+//                     pname:pname,
+//                     pstorage:pstorage,
+//                     pprice:pprice,
+//                     presolution:presolution,
+//                     psize:psize,
+//                   //  image: imageFile
+//                 });
+
+//                 product.save(function (err) {
+//                     if (err)
+//                         return console.log(err);
+
+//                     mkdirp('public/product_images/' + product._id, function (err) {
+//                         return console.log(err);
+//                     });
+
+//                     mkdirp('public/product_images/' + product._id + '/gallery', function (err) {
+//                         return console.log(err);
+//                     });
+
+//                     mkdirp('public/product_images/' + product._id + '/gallery/thumbs', function (err) {
+//                         return console.log(err);
+//                     });
+
+//                     // if (imageFile != "") {
+//                     //     var productImage = req.files.image;
+//                     //     var path = 'public/product_images/' + product._id + '/' + imageFile;
+
+//                     //     productImage.mv(path, function (err) {
+//                     //         return console.log(err);
+//                     //     });
+//                     // }
+
+//                     req.flash('success', 'Product added!');
+//                     res.redirect('/'); /***************************mo2qtn */
+//                 });
+//             }
+//         });
+//     }
+
+// });
+
+
+
+
+
+
+
+
+router.post('/addproduct', [
+ //   var imageFile = typeof req.files.image !== "undefined" ? req.files.image.name : "";
+    check('pname').not().isEmpty().withMessage( 'Name must have a value.'),
+    check('pstorage').not().isEmpty().withMessage( 'Storage Capacity must have a value.'),
+    check('pprice').not().isEmpty().withMessage('Price must have a value.'),
+    check('presolution').not().isEmpty().withMessage('Resolution must have a value.'),
+    check('psize').not().isEmpty().withMessage( 'display size must have a value.'),
+    check('pnum').not().isEmpty().withMessage( 'display size must have a value.'),
+    // req.checkBody('image', 'You must upload an image').isImage(imageFile);
+
+   
   
-    var totalProducts = null;
-
-    Product.find({}, (error, doc) => {
-      if (error) {
-        console.log(error)
-      }
-      var productGrid = [];
-      var colGrid = 3;
-  
-      for (var i = 0; i < doc.length; i += colGrid) {
-        productGrid.push(doc.slice(i, i + colGrid))
-      }
-      res.render('admin/profileadmin', {
-        title: 'Shopping-cart'
-        , products: productGrid,
-        checkuser: req.isAuthenticated(),
-        totalProducts: totalProducts ,
-        successMas : successMas ,
-      });
-    })
-  
-  })
-
-router.get('/signinadmin', isNotSignin, (req, res, next) => {
-    var massagesError = req.flash('signinError');
-    res.render('admin/signinadmin', { massages: massagesError, token: req.csrfToken() });
-})
-
-router.post('/signinadmin', [
-    check('email').not().isEmpty().withMessage('please enter your email'),
-    check('email').isEmail().withMessage('please enter valid email'),
-    check('password').not().isEmpty().withMessage('please enter your password'),
-    check('password').isLength({ min: 5 }).withMessage('please enter pssword more than 5 char'),
-
 ], (req, res, next) => {
+
+    var pname = req.body.pname;
+    var slug = pname.replace(/\s+/g, '-').toLowerCase();
+    var pstorage = req.body.pstorage;
+    var pprice = req.body.pprice;
+    var presolution = req.body.presolution;
+    var psize = req.body.psize;
+    var pnum= req.body.pnum;
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        var validationMassages = [];
+
+
+         var validationMassages = [];
         for (var i = 0; i < errors.errors.length; i++) {
-            validationMassages.push(errors.errors[i].msg)
+          validationMassages.push(errors.errors[i].msg)
         }
+  
 
-        req.flash('signinError', validationMassages);
-        res.redirect('signinadmin')
+        res.render('admin/add_product', {
+            errors:validationMassages,
+            pname:pname,
+            pstorage:pstorage,
+            pprice:pprice,
+            presolution:presolution,
+            psize:psize,
+            pnum:pnum
+            
+        });
 
-        return;
-    }
-// var emailinput = req.body.email;
-// var passwordinput= req.body.password;
-// if(emailinput == 'marwa'){​​​​​
-// if(passwordinput== "123456"){​​​​​
-//  req.session.user={​​​​​
-//  email:emailinput,
-//  password:passwordinput
-//  }​​​​​
-// res.redirect('/admin/signinadmin');
-// }​​​​​else{​​​​​
-// res.redirect('/admin/signinadmin');
-// }​​​​​
-// }​​​​​
-// else{​​​​​
-// res.redirect('/admin/signinadmin');
-// }​​​​​
-    next();
+        
+       // return;
+    } else {
+                       //lessa 3yza a check if already exists
+        var price2 = parseFloat(pprice).toFixed(2);
 
+        var products=[ new Product({
 
-}, passport.authenticate('local-signin', {
-    successRedirect: 'profileadmin',
-    failureRedirect: 'signinadmin',
-    failureFlash: true,
-}))
+          //  imagePath: imageFile,
+        
+            productName:pname ,
+        
+            information: {
+                storageCapacity: pstorage ,
+                numberOfSIM: pnum , 
+                cameraResolution: presolution, 
+                displaySize : psize ,
+                
+        
+            } ,
+        
+            price: price2 ,
+        }),
+    ]
 
+        var done = 0 ;
 
-
-
-
-router.get('/logout', isSignin, (req, res, next) => {
-    req.logOut();
-    res.redirect('/')
-
-})
-
-function isSignin(req, res, next) {
-    if (!req.isAuthenticated()) {
-        res.redirect('signinadmin')
-        return;
-    }
-    next();
-}
-
-function isNotSignin(req, res, next) {
-    if (req.isAuthenticated()) {
-        res.redirect('/')
-        return;
-    }
-
-    next(); //5osh 3ala el call back fn
-
+for( var i = 0 ; i < products.length ; i++){
+    products[i].save((error , doc)=>{
+        if(error){
+            console.log(error)
+        }
+        console.log(doc)
+        done ++
+        if(done === products.length) { 
+            mongoose.disconnect();
+        }
+    })
 }
 
 
+req.flash('success', 'Product added!');
+//res.redirect('/');
+    
 
+    
+
+       /// mongoose.disconnect();
+        
+  
+
+    }//end else
+       // req.flash('success', 'Product added!');
+        //res.redirect('/');
+     //  return;
+      /*  product.save(function (err) {
+            if (err)
+                return console.log(err);
+
+            mkdirp('public/product_images/' + product._id, function (err) {
+                return console.log(err);
+            });
+
+            mkdirp('public/product_images/' + product._id + '/gallery', function (err) {
+                return console.log(err);
+            });
+
+            mkdirp('public/product_images/' + product._id + '/gallery/thumbs', function (err) {
+                return console.log(err);
+            });
+
+            // if (imageFile != "") {
+            //     var productImage = req.files.image;
+            //     var path = 'public/product_images/' + product._id + '/' + imageFile;
+
+            //     productImage.mv(path, function (err) {
+            //         return console.log(err);
+            //     });
+            // }
+
+            req.flash('success', 'Product added!');
+            res.redirect('/'); /***************************mo2qtn 
+        });*/
+    
+});
 
 
 
 module.exports = router;
 
-
-//******************************* */
-
-    
-// router.get('/login', function(req, res){​​​​​
-// if(!req.session.user && !req.cookies.user_sid){​​​​​
-// res.render('admin/login/index', {​​​​​layout: 'admin-raw'}​​​​​)
-// }​​​​​else{​​​​​
-// res.redirect('/admin/dashbord');
-// }​​​​​
-// }​​​​​)
-
-// router.post('/login',(req,res)=>{​​​​​
-// var username = req.body.username;
-// var password = req.body.password;
-// if(username == 'admin'){​​​​​
-// if(password == "admin"){​​​​​
-// req.session.user={​​​​​
-// username:username,
-// password:password
-// }​​​​​
-// res.redirect('/admin/dashbord');
-// }​​​​​else{​​​​​
-// res.redirect('/admin/login');
-// }​​​​​
-// }​​​​​
-// else{​​​​​
-// res.redirect('/admin/login');
-// }​​​​​
-// }​​​​​);

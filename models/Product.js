@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const productSchema = mongoose.Schema({
     imagePath: {
         type: String,
-        required: true
+        required: false  ////3adltaha kant true
     },
 
     productName: {

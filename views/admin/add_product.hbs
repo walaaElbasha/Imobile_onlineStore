@@ -1,0 +1,71 @@
+
+<h2 class="page-title">Add a product</h2>
+<a href="/admin/products" class="btn btn-primary">Back to all products</a>
+<br><br>
+
+<form method="post" action="/admin/addproduct" enctype="multipart/form-data">
+    <div class="displayErrors">
+        {{#each errors}}
+    <div class="alert alert-danger">
+        <p>{{this}}</p>
+    </div>  
+    {{/each}}
+
+    </div>
+    <div class="form-group">
+        <label for="">Product Name</label>
+        <input type="text" class="form-control" name="pname" value="{{pname}}"  >
+    </div>
+    
+        <div class="form-group">
+        <label for="">Storage Capacity</label>
+        <input type="text" class="form-control" name="pstorage"  value="{{pstorage}}" >
+    </div>
+    
+    <div class="form-group">
+        <label for="">Number Of SIM</label>
+         <input type="text" class="form-control" name="pnum" value="{{pnum}}" >
+    </div>
+     <div class="form-group">
+        <label for="">Rear Camera Resolution</label>
+         <input type="text" class="form-control" name="presolution" value="{{presolution}}" >
+    </div>
+       <div class="form-group">
+        <label for="">Display Size (Inch)</label>
+           <input type="text" class="form-control" name="psize" value="{{psize}}" >
+    </div>
+  
+    <div class="form-group">
+        <label for="">Price</label>
+        <input type="text" class="form-control" name="pprice"  placeholder="Price">
+    </div>
+    
+    <div class="form-group">
+        <label for="">Image</label>
+        <input type="file" class="form-control" name="image" id="img">
+        <img src="#" id="imgPreview" alt="">
+    </div>
+    
+    <button class="btn btn-default">Submit</button>
+</form>
+
+<script>
+    
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function(e) {
+                $("#imgPreview").attr('src', e.target.result).width(100).height(100);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#img").change(function() {
+        readURL(this);
+    });
+    
+</script>
+
