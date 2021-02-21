@@ -417,6 +417,7 @@ router.post('/productreview/:id',  [
     var commentWritten = "";
     commentWritten = req.body.comment;
     var rateWritten = req.body.rate;
+    var productId =req.params.id;
 
     User.findById(req.user._id, (err, result) => {
       if (err) {
@@ -441,48 +442,7 @@ router.post('/productreview/:id',  [
       })
 
     })
-    // User.find({ _id: req.body._id }, (err, result) => {
-    //   if (err)
-    //     return console.log(err)
-
-    //     console.log("this is my name"+result.userName);
-    // })
-    Product.findById(req.params.id, function (err, product) {
-      var product = product;
-      if (err)
-        return console.log(err);
-
-
-      Review.find({ productId: req.params.id }, (err, result) => {
-        if (err)
-          return console.log(err)
-
-        var AllReviewsWithNames = result;
-
-        if (AllReviewsWithNames) {
-
-          console.log("reviewwwws found" + AllReviewsWithNames);
-          res.render('productreview', {
-            productId: req.params.id,
-            product: product,
-            AllReviewsWithNames: AllReviewsWithNames,
-            checkuser: req.isAuthenticated(),
-          })
-
-        } else {
-          console.log("no reviewwws found" + result);
-          res.render('productreview', {
-            AllReviewsWithNames: "",
-            checkuser: req.isAuthenticated(),
-          })
-
-
-        }
-
-      })
-
-
-    })
+      res.redirect('/productreview/'+productId);
 
   }
 })
