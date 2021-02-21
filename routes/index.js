@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-
 const Product = require('../models/Product');
 const Cart = require('../models/Cart');
-const Order = require('../models/Order') ;
-
-
+const Order = require('../models/Order');
+const { check, validationResult } = require('express-validator');
+const Review = require('../models/Review');
+const User = require('../models/User');
 const stripe = require('stripe')('sk_test_JjUgugHcOxWAbVVjcB5hwIjN00BHAya1o9');
 
 /* GET home page. */
@@ -38,8 +38,8 @@ router.get('/', function (req, res, next) {
       title: 'Shopping-cart'
       , products: productGrid,
       checkuser: req.isAuthenticated(),
-      totalProducts: totalProducts ,
-      successMas : successMas ,
+      totalProducts: totalProducts,
+      successMas: successMas,
     });
   })
 
@@ -49,7 +49,7 @@ router.get('/addTocart/:id/:price/:name', (req, res, next) => {
 
 
 
-  req.session.hasCart = true ;
+  req.session.hasCart = true;
   const cartID = req.user._id;
   const newproductPrice = parseInt(req.params.price, 10)
 
@@ -72,8 +72,8 @@ router.get('/addTocart/:id/:price/:name', (req, res, next) => {
         totalquantity: 1,
         totalPrice: newproductPrice,
         selectedProduct: [newProduct],
-        createAt : Date.now() ,
-       
+        createAt: Date.now(),
+
       })
 
 
@@ -98,7 +98,7 @@ router.get('/addTocart/:id/:price/:name', (req, res, next) => {
         cart.selectedProduct[indexOfProduct].price = cart.selectedProduct[indexOfProduct].price + newproductPrice;
         cart.totalquantity = cart.totalquantity + 1;
         cart.totalPrice = cart.totalPrice + newproductPrice;
-        cart.createAt = Date.now() ;
+        cart.createAt = Date.now();
         Cart.updateOne({ _id: cartID }, { $set: cart }, (error, doc) => {
           if (error) {
             console.log(error)
@@ -126,230 +126,366 @@ router.get('/addTocart/:id/:price/:name', (req, res, next) => {
 })
 
 
-router.get('/shopping-cart' , (req , res , next)=>{
-  if(!req.isAuthenticated()){
-     res.redirect('/users/signin')
-     return ;
+router.get('/shopping-cart', (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    res.redirect('/users/signin')
+    return;
   }
 
   console.log(req.session.hasCart)
 
-  if(!req.user.cart){
-    res.render('shoppingcart' , {checkuser :true , hasCart : req.session.hasCart , totalProducts : 0 }) ;
-    req.session.hasCart = false ;
-    return ;
+  if (!req.user.cart) {
+    res.render('shoppingcart', { checkuser: true, hasCart: req.session.hasCart, totalProducts: 0 });
+    req.session.hasCart = false;
+    return;
   }
 
-  const userCart = req.user.cart ;
+  const userCart = req.user.cart;
 
   const totalProducts = req.user.cart.totalquantity
 
-  res.render('shoppingcart' , {userCart : userCart , checkuser :true , totalProducts : totalProducts   })
+  res.render('shoppingcart', { userCart: userCart, checkuser: true, totalProducts: totalProducts })
 })
 
-router.get('/increaseProduct/:index' , (req , res , next)=>{
+router.get('/increaseProduct/:index', (req, res, next) => {
 
-  if(req.user.cart){
-    const index = req.params.index ;
-    const userCart = req.user.cart ;
+  if (req.user.cart) {
+    const index = req.params.index;
+    const userCart = req.user.cart;
     const productPrice = userCart.selectedProduct[index].price / userCart.selectedProduct[index].quantity
-  
-    userCart.selectedProduct[index].quantity = userCart.selectedProduct[index].quantity + 1 ;
-    userCart.selectedProduct[index].price = userCart.selectedProduct[index].price + productPrice ; 
-  
-    userCart.totalquantity = userCart.totalquantity + 1 ;
-    userCart.totalPrice = userCart.totalPrice + productPrice ;
+    userCart.selectedProduct[index].quantity = userCart.selectedProduct[index].quantity + 1;
+    userCart.selectedProduct[index].price = userCart.selectedProduct[index].price + productPrice;
+    userCart.totalquantity = userCart.totalquantity + 1;
+    userCart.totalPrice = userCart.totalPrice + productPrice;
     userCart.createAt = Date.now()
     console.log(userCart)
-  
-    Cart.updateOne({_id : userCart._id } , {$set : userCart} , (err , doc) =>{
-      if(err){
+
+    Cart.updateOne({ _id: userCart._id }, { $set: userCart }, (err, doc) => {
+      if (err) {
         console.log(err)
       }
-       
+
       console.log(doc)
       res.redirect('/shopping-cart')
     })
-    
 
-  }else{
+
+  } else {
     res.redirect('shopping-cart');
   }
- 
- 
+
+
 })
 
 
-router.get('/decreaseProduct/:index' , (req , res , next)=>{
+router.get('/decreaseProduct/:index', (req, res, next) => {
 
-  if(req.user.cart){
+  if (req.user.cart) {
 
-    const index = req.params.index ;
-    const userCart = req.user.cart ;
+    const index = req.params.index;
+    const userCart = req.user.cart;
     const productPrice = userCart.selectedProduct[index].price / userCart.selectedProduct[index].quantity
-  
-    userCart.selectedProduct[index].quantity = userCart.selectedProduct[index].quantity - 1 ;
-    userCart.selectedProduct[index].price = userCart.selectedProduct[index].price - productPrice ; 
-  
-    userCart.totalquantity = userCart.totalquantity - 1 ;
-    userCart.totalPrice = userCart.totalPrice - productPrice ;
+
+    userCart.selectedProduct[index].quantity = userCart.selectedProduct[index].quantity - 1;
+    userCart.selectedProduct[index].price = userCart.selectedProduct[index].price - productPrice;
+
+    userCart.totalquantity = userCart.totalquantity - 1;
+    userCart.totalPrice = userCart.totalPrice - productPrice;
     userCart.createAt = Date.now();
-  
+
     console.log(userCart)
-  
-  
-    Cart.updateOne({_id : userCart._id } , {$set : userCart} , (err , doc) =>{
-      if(err){
+
+
+    Cart.updateOne({ _id: userCart._id }, { $set: userCart }, (err, doc) => {
+      if (err) {
         console.log(err)
       }
-       
+
       console.log(doc)
       res.redirect('/shopping-cart')
     })
 
-  }else{
-    res.redirect('/shopping-cart') ;
+  } else {
+    res.redirect('/shopping-cart');
   }
 
 
-  
+
 
 })
 
 
-router.get('/deleteProduct/:index' , (req , res ,next)=>{
+router.get('/deleteProduct/:index', (req, res, next) => {
 
 
-  if(req.user.cart){
+  if (req.user.cart) {
 
-    const index = req.params.index ;
-  const userCart = req.user.cart; 
+    const index = req.params.index;
+    const userCart = req.user.cart;
 
-  console.log(userCart.selectedProduct.length)
-
-
-  if(userCart.selectedProduct.length <=1){
-    Cart.deleteOne({_id : userCart._id} , (err , doc)=>{
-      if(err){
-        console.log(err)
-      }
-      console.log(doc)
-
-      res.redirect('/shopping-cart');
-    })
-  } else{
-
-    userCart.totalPrice = userCart.totalPrice - userCart.selectedProduct[index].price ;
-    userCart.totalquantity = userCart.totalquantity - userCart.selectedProduct[index].quantity ;
-  
-    userCart.selectedProduct.splice(index , 1) ;
-    userCart.createAt = Date.now() ;
-
-    console.log(userCart)
-  
-    Cart.updateOne({_id : userCart._id} , {$set : userCart} , (err , doc)=>{
-      if(err){
-        console.log(err)
-      }
-      console.log(doc)
-      res.redirect('/shopping-cart')
-    })
-
-  }
+    console.log(userCart.selectedProduct.length)
 
 
-  }else{
+    if (userCart.selectedProduct.length <= 1) {
+      Cart.deleteOne({ _id: userCart._id }, (err, doc) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(doc)
+
+        res.redirect('/shopping-cart');
+      })
+    } else {
+
+      userCart.totalPrice = userCart.totalPrice - userCart.selectedProduct[index].price;
+      userCart.totalquantity = userCart.totalquantity - userCart.selectedProduct[index].quantity;
+
+      userCart.selectedProduct.splice(index, 1);
+      userCart.createAt = Date.now();
+
+      console.log(userCart)
+
+      Cart.updateOne({ _id: userCart._id }, { $set: userCart }, (err, doc) => {
+        if (err) {
+          console.log(err)
+        }
+        console.log(doc)
+        res.redirect('/shopping-cart')
+      })
+
+    }
+
+
+  } else {
     res.redirect('/shopping-cart')
   }
 
-  
 
- 
+
+
 })
 
 
-router.get('/checout' , (req , res , next)=>{
+router.get('/checout', (req, res, next) => {
 
 
 
 
-  if(req.user.cart){
-    const errorMas = req.flash('error')[0] ;
+  if (req.user.cart) {
+    const errorMas = req.flash('error')[0];
     console.log(errorMas)
     console.log(req.user)
 
-    if(req.user.userName === undefined || req.user.address === undefined || req.user.contact === undefined ){
-      req.flash('profileError' , ['please update your information befor do order']) ;
-      res.redirect('users/profile') ;
-      return ;
+    if (req.user.userName === undefined || req.user.address === undefined || req.user.contact === undefined) {
+      req.flash('profileError', ['please update your information befor do order']);
+      res.redirect('users/profile');
+      return;
     }
-    res.render('checkout' ,{checkuser :true , 
-       totalProducts : req.user.cart.totalquantity ,
-       totalPrice : req.user.cart.totalPrice ,
-       errorMas : errorMas ,
-       user : req.user ,
-  
-        }) 
-  }else{
+    res.render('checkout', {
+      checkuser: true,
+      totalProducts: req.user.cart.totalquantity,
+      totalPrice: req.user.cart.totalPrice,
+      errorMas: errorMas,
+      user: req.user,
+
+    })
+  } else {
     res.redirect('/shopping-cart')
   }
-  
+
 })
 
 
-router.post('/checkout' , (req , res , next)=>{
+router.post('/checkout', (req, res, next) => {
 
   stripe.charges.create(
     {
-       amount : req.user.cart.totalPrice * 100 ,
-       currency : "usd" ,
-       source : req.body.stripeToken ,
-       description : "charge for test@example.com"
+      amount: req.user.cart.totalPrice * 100,
+      currency: "usd",
+      source: req.body.stripeToken,
+      description: "charge for test@example.com"
     },
-    function(err, charge) {
+    function (err, charge) {
       if (err) {
 
         console.log(err.raw.message)
 
-        req.flash('error' ,err.raw.message) ;
+        req.flash('error', err.raw.message);
 
         res.redirect('/checout')
-        
+
       }
 
       console.log(charge)
 
-      req.flash('success' , 'successfuly bought products !!') ;
+      req.flash('success', 'successfuly bought products !!');
 
       const order = new Order({
-        user : req.user._id ,
-        cart : req.user.cart ,
-        address : req.body.address ,
-        name : req.body.name ,
-        contact : req.body.contact  , 
-        paymentId : charge.id ,
-        orderPrice : req.user.cart.totalPrice ,
-      }) ;
+        user: req.user._id,
+        cart: req.user.cart,
+        address: req.body.address,
+        name: req.body.name,
+        contact: req.body.contact,
+        paymentId: charge.id,
+        orderPrice: req.user.cart.totalPrice,
+      });
 
-      order.save((err , resualt)=>{
-        if(err){
-          console.log(err) ;
-        } 
-        console.log(resualt) ;
+      order.save((err, resualt) => {
+        if (err) {
+          console.log(err);
+        }
+        console.log(resualt);
 
-        Cart.deleteOne({_id : req.user.cart._id} , (err , doc)=>{
-          if(err){
+        Cart.deleteOne({ _id: req.user.cart._id }, (err, doc) => {
+          if (err) {
             console.log(err)
           }
-          res.redirect('/') ;
+          res.redirect('/');
         })
       })
-      
+
     }
   );
 
 })
 
+router.get('/productreview/:id', (req, res, next) => {
+
+  Product.findById(req.params.id, function (err, product) {
+    var product = product;
+    if (err)
+      return console.log(err);
+
+
+    Review.find({ productId: req.params.id }, (err, result) => {
+      if (err)
+        return console.log(err)
+
+      var AllReviewsWithNames = result;
+
+      if (AllReviewsWithNames) {
+          
+        console.log("reviewwwws found" + AllReviewsWithNames);
+        res.render('productreview', {
+          productId: req.params.id,
+          product: product,
+          AllReviewsWithNames: AllReviewsWithNames,
+          checkuser: req.isAuthenticated(),
+        })
+
+      } else {
+        console.log("no reviewwws found" + result);
+
+        res.render('productreview', {
+          AllReviewsWithNames: "",
+          checkuser: req.isAuthenticated(),
+
+        })
+
+
+      }
+
+    })
+
+
+  })
+
+})
+
+router.post('/productreview/:id',  [
+   
+  check('rate').not().isEmpty().withMessage('You didnt assign a rate value'),
+
+], (req, res, next) => {
+  //INSERT IN DATABASE
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+
+    var validationMassages = [];
+    for (var i = 0; i < errors.errors.length; i++) {
+      validationMassages.push(errors.errors[i].msg)
+    }
+    res.render('productreview', {
+      errors: validationMassages,
+
+    });
+
+  } else {
+
+
+    var commentWritten = "";
+    commentWritten = req.body.comment;
+    var rateWritten = req.body.rate;
+
+    User.findById(req.user._id, (err, result) => {
+      if (err) {
+        console.log(err)
+      }
+      var userIdentity = result;
+      console.log("MY Identity-----------------!!!!!!!!!!!" + result);
+      console.log("MY address is " + result.userName);
+
+
+      const newReview = new Review({
+        user: result.userName,
+        productId: req.params.id,
+        commentBody: commentWritten,
+        rate: rateWritten,
+      })
+      newReview.save((error, doc) => {
+        if (error) {
+          console.log(error)
+        }
+        console.log(doc)
+      })
+
+    })
+    // User.find({ _id: req.body._id }, (err, result) => {
+    //   if (err)
+    //     return console.log(err)
+
+    //     console.log("this is my name"+result.userName);
+    // })
+    Product.findById(req.params.id, function (err, product) {
+      var product = product;
+      if (err)
+        return console.log(err);
+
+
+      Review.find({ productId: req.params.id }, (err, result) => {
+        if (err)
+          return console.log(err)
+
+        var AllReviewsWithNames = result;
+
+        if (AllReviewsWithNames) {
+
+          console.log("reviewwwws found" + AllReviewsWithNames);
+          res.render('productreview', {
+            productId: req.params.id,
+            product: product,
+            AllReviewsWithNames: AllReviewsWithNames,
+            checkuser: req.isAuthenticated(),
+          })
+
+        } else {
+          console.log("no reviewwws found" + result);
+          res.render('productreview', {
+            AllReviewsWithNames: "",
+            checkuser: req.isAuthenticated(),
+          })
+
+
+        }
+
+      })
+
+
+    })
+
+  }
+})
 
 
 module.exports = router;

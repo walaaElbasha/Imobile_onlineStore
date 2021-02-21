@@ -1,320 +1,76 @@
-{{!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-  </head>
-  <body>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-dark ">
-    
+<head>
+  <title>{{title}}</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
+</head>
 
-  <span class="navbar-brand mb-0 h1 text-white p-2 border-right"> <i class="bi bi-phone p-1"></i>Imobile</span>
-  <a class=" text-white" href="/"> <i class="bi bi-house p-1"></i>Home</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<body>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
-     
-      <li class="nav-item">
-        <a class="nav-link text-white" href="/shopping-cart">
-          <i class="fas fa-shopping-cart"></i>
-          Shopping-cart
-          <span class="badge badge-pill badge-primary">{{totalProducts}}</span>
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark ">
+
+
+    <span class="navbar-brand mb-0 h1 text-white p-2 border-right"> <i class="bi bi-phone p-1"></i>Imobile</span>
+
+    {{#if checkuser }}
+    {{#if checkprofile}}
+    <a class="text-white mr-1" href="/admin/profileadmin"> <i class="bi bi-house p-1"></i>Home admin</a>
+    <a class=" text-white" href="/"> <i class="bi bi-house p-1"></i>Home </a>
+
+    {{else}}
+
+    <a class=" text-white" href="/"> <i class="bi bi-house p-1"></i>Home </a>
+
+    {{/if}}
+    {{/if}}
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+
+
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user"></i>
+            Admin-mangment
           </a>
-      </li>
-      
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user"></i>
-          Admin-mangment
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          {{#if checkuser}}
-          {{#if checkprofile}}
-              <a class="dropdown-item" href="/admin/logout" > <i class="bi bi-box-arrow-in-left"></i>Logout</a> 
-              
-              
-              {{else}}
-               <a class="dropdown-item" href="/users/signup"> <i class="fas fa-user-plus "></i> Signup</a>
-           <a class="dropdown-item" href="/users/signin"> <i class="fas fa-sign-in-alt"></i> login</a>
-           <a class="dropdown-item" href="/admin/signin"> <i class="bi bi-person-x-fill"></i> Staff only</a>
-           {{/if}}
-            {{/if}}  
-                                  
-        </div>          
-      </li>
-    </ul>
-  </div>
-</nav>
-      
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <div class="container">
-    {{{body}}}
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            {{#if checkuser}}
+            {{#if checkprofile}}
+
+            <a class="dropdown-item" href="/admin/logout"> <i class="bi bi-box-arrow-in-left"></i>Logout</a>
+
+
+            {{else}}
+            <a class="dropdown-item" href="/users/signup"> <i class="fas fa-user-plus "></i> Signup</a>
+            <a class="dropdown-item" href="/users/signin"> <i class="fas fa-sign-in-alt"></i> login</a>
+            <a class="dropdown-item" href="/admin/signin"> <i class="bi bi-person-x-fill"></i> Staff only</a>
+            {{/if}}
+            {{/if}}
+
+          </div>
+        </li>
+      </ul>
     </div>
+  </nav>
 
-     {{> footer}}
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  </body>
-</html> --}}
-
-
-{{!-- 
-
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-  </head>
-  <body>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
- 
-<nav class="navbar navbar-expand-lg navbar-light bg-dark ">
-    
- 
-  <span class="navbar-brand mb-0 h1 text-white p-2 border-right"> <i class="bi bi-phone p-1"></i>Imobile</span>
-  <a class=" text-white" href="/admin/profileadmin"> <i class="bi bi-house p-1"></i>Home admin</a>
-  <a class=" text-white" href="/"> <i class="bi bi-house p-1"></i>Home </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
- 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
-     
-     
-      
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user"></i>
-          Admin-mangment
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          {{#if checkuser}}
-          {{#if checkprofile}}
-              <a class="dropdown-item" href="/admin/logout" > <i class="bi bi-box-arrow-in-left"></i>Logout</a> 
-              
-              
-              {{else}}
-               <a class="dropdown-item" href="/users/signup"> <i class="fas fa-user-plus "></i> Signup</a>
-           <a class="dropdown-item" href="/users/signin"> <i class="fas fa-sign-in-alt"></i> login</a>
-           <a class="dropdown-item" href="/admin/signin"> <i class="bi bi-person-x-fill"></i> Staff only</a>
-           {{/if}}
-            {{/if}}  
-                                  
-        </div>          
-      </li>
-    </ul>
-  </div>
-</nav>
-      
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <div class="container">
+  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <div class="container">
     {{{body}}}
-    </div>
- 
-     {{> footer}}
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  </body>
-</html> --}}
+  </div>
 
-
-
-
-{{!--     
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>{​​​​​​​​{​​​​​​​​title}​​​​​​​​}​​​​​​​​</title>
-<linkrel='stylesheet'href='/stylesheets/style.css' />
-<linkrel="stylesheet"href="/bower_components/bootstrap/dist/css/bootstrap.css">
-<linkrel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-</head>
-<body>
-<linkrel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
- 
-<navclass="navbar navbar-expand-lg navbar-light bg-dark ">
-
- 
-<spanclass="navbar-brand mb-0 h1 text-white p-2 border-right"><iclass="bi bi-phone p-1"></i>Imobile</span>
-<aclass=" text-white"href="/admin/profileadmin"><iclass="bi bi-house p-1"></i>Home admin</a>
-<aclass=" text-white"href="/"><iclass="bi bi-house p-1"></i>Home </a>
-<buttonclass="navbar-toggler"type="button"data-toggle="collapse"data-target="#navbarSupportedContent"aria-controls="navbarSupportedContent"aria-expanded="false"aria-label="Toggle navigation">
-<spanclass="navbar-toggler-icon"></span>
-</button>
- 
-<divclass="collapse navbar-collapse"id="navbarSupportedContent">
-<ulclass="navbar-nav ml-auto">
-
-
-
-<liclass="nav-item dropdown">
-<aclass="nav-link dropdown-toggle text-white"href="#"id="navbarDropdown"role="button"data-toggle="dropdown"aria-haspopup="true"aria-expanded="false">
-<iclass="fas fa-user"></i>
-          Admin-mangment
-</a>
-<divclass="dropdown-menu"aria-labelledby="navbarDropdown">
-{​​​​​​​​{​​​​​​​​#ifcheckuser}​​​​​​​​}​​​​​​​​
-{​​​​​​​​{​​​​​​​​#ifcheckprofile}​​​​​​​​}​​​​​​​​
-<aclass="dropdown-item"href="/admin/logout"><iclass="bi bi-box-arrow-in-left"></i>Logout</a>
-
-
-{​​​​​​​​{​​​​​​​​else}​​​​​​​​}​​​​​​​​
-<aclass="dropdown-item"href="/users/signup"><iclass="fas fa-user-plus "></i> Signup</a>
-<aclass="dropdown-item"href="/users/signin"><iclass="fas fa-sign-in-alt"></i> login</a>
-<aclass="dropdown-item"href="/admin/signin"><iclass="bi bi-person-x-fill"></i> Staff only</a>
-{​​​​​​​​{​​​​​​​​/if}​​​​​​​​}​​​​​​​​
-{​​​​​​​​{​​​​​​​​/if}​​​​​​​​}​​​​​​​​
-
-</div>
-</li>
-</ul>
-</div>
-</nav>
-
-<scriptsrc="/bower_components/jquery/dist/jquery.min.js"></script>
-<divclass="container">
-{​​​​​​​​{​​​​​​​​{​​​​​​​​body}​​​​​​​​}​​​​​​​​}​​​​​​​​
-</div>
- 
-{​​​​​​​​{​​​​​​​​>footer}​​​​​​​​}​​​​​​​​
-<scriptsrc="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  {{> footer}}
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
-</html>
 
-​
-    
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>{​​​​​​​​{​​​​​​​​title}​​​​​​​​}​​​​​​​​</title>
-<linkrel='stylesheet'href='/stylesheets/style.css' />
-<linkrel="stylesheet"href="/bower_components/bootstrap/dist/css/bootstrap.css">
-<linkrel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-</head>
-<body>
-<linkrel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
- 
-<navclass="navbar navbar-expand-lg navbar-light bg-dark ">
-
- 
-<spanclass="navbar-brand mb-0 h1 text-white p-2 border-right"><iclass="bi bi-phone p-1"></i>Imobile</span>
- 
-<aclass=" text-white"href="/"><iclass="bi bi-house p-1"></i>Home </a>
-<buttonclass="navbar-toggler"type="button"data-toggle="collapse"data-target="#navbarSupportedContent"aria-controls="navbarSupportedContent"aria-expanded="false"aria-label="Toggle navigation">
-<spanclass="navbar-toggler-icon"></span>
-</button>
- 
-<divclass="collapse navbar-collapse"id="navbarSupportedContent">
-<ulclass="navbar-nav ml-auto">
-
-
-
-<liclass="nav-item dropdown">
-<aclass="nav-link dropdown-toggle text-white"href="#"id="navbarDropdown"role="button"data-toggle="dropdown"aria-haspopup="true"aria-expanded="false">
-<iclass="fas fa-user"></i>
-          Admin-mangment
-</a>
-<divclass="dropdown-menu"aria-labelledby="navbarDropdown">
-{​​​​​​​​{​​​​​​​​#ifcheckuser}​​​​​​​​}​​​​​​​​
-{​​​​​​​​{​​​​​​​​#ifcheckprofile}​​​​​​​​}​​​​​​​​
-<aclass="dropdown-item"href="/admin/profileadmin"><iclass="bi bi-house p-1"></i>Home admin</a>
-<aclass="dropdown-item"href="/admin/logout"><iclass="bi bi-box-arrow-in-left"></i>Logout</a>
-
-
-{​​​​​​​​{​​​​​​​​else}​​​​​​​​}​​​​​​​​
-<aclass="dropdown-item"href="/users/signup"><iclass="fas fa-user-plus "></i> Signup</a>
-<aclass="dropdown-item"href="/users/signin"><iclass="fas fa-sign-in-alt"></i> login</a>
-<aclass="dropdown-item"href="/admin/signin"><iclass="bi bi-person-x-fill"></i> Staff only</a>
-{​​​​​​​​{​​​​​​​​/if}​​​​​​​​}​​​​​​​​
-{​​​​​​​​{​​​​​​​​/if}​​​​​​​​}​​​​​​​​
-
-</div>
-</li>
-</ul>
-</div>
-</nav>
-
-<scriptsrc="/bower_components/jquery/dist/jquery.min.js"></script>
-<divclass="container">
-{​​​​​​​​{​​​​​​​​{​​​​​​​​body}​​​​​​​​}​​​​​​​​}​​​​​​​​
-</div>
- 
-{​​​​​​​​{​​​​​​​​>footer}​​​​​​​​}​​​​​​​​
-<scriptsrc="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-</body>
-</html> --}}
-
-
-
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
-  </head>
-  <body>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-
-<nav class="navbar navbar-expand-lg navbar-light bg-dark ">
-    
-
-  <span class="navbar-brand mb-0 h1 text-white p-2 border-right"> <i class="bi bi-phone p-1"></i>Imobile</span>
-
-  <a class=" text-white" href="/"> <i class="bi bi-house p-1"></i>Home </a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
-     
-     
-      
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user"></i>
-          Admin-mangment
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          {{#if checkuser}}
-          {{#if checkprofile}}
-            <a  class="dropdown-item"href="/admin/profileadmin"> <i class="bi bi-house p-1"></i>Home admin</a>
-              <a class="dropdown-item" href="/admin/logout" > <i class="bi bi-box-arrow-in-left"></i>Logout</a> 
-              
-              
-              {{else}}
-               <a class="dropdown-item" href="/users/signup"> <i class="fas fa-user-plus "></i> Signup</a>
-           <a class="dropdown-item" href="/users/signin"> <i class="fas fa-sign-in-alt"></i> login</a>
-           <a class="dropdown-item" href="/admin/signin"> <i class="bi bi-person-x-fill"></i> Staff only</a>
-           {{/if}}
-            {{/if}}  
-                                  
-        </div>          
-      </li>
-    </ul>
-  </div>
-</nav>
-      
-    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-    <div class="container">
-    {{{body}}}
-    </div>
-
-     {{> footer}}
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  </body>
 </html>

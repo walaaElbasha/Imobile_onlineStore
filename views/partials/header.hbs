@@ -20,11 +20,29 @@
           <span class="badge badge-pill badge-primary">{{totalProducts}}</span>
           </a>
       </li>
+
+      {{#if checkuser}}
       <li class="nav-item dropdown">
+
         <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+         
+         
           <i class="fas fa-user"></i>
           User-mangment
         </a>
+        {{else}}
+
+      <li class="nav-item dropdown">
+
+  <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
+
+
+    <i class="fas fa-user"></i>
+     Login
+  </a>
+{{/if}}
+
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           {{#if checkuser}}
             {{#if checkProfile}}

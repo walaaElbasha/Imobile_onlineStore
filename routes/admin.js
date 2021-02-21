@@ -104,8 +104,8 @@ router.get('/editproductdescription/:id', function(req, res) {
     console.log(req.params.id);
     // console.log(product);
     Product.findById(req.params.id, function(err, product) {
-        console.log(req.params.id);
-        console.log(product);
+        console.log("PRODUCT ID IS "+req.params.id);
+        console.log("product full object is"+product);
         var product = product;
         if (err)
             return console.log(err);
@@ -129,12 +129,11 @@ router.post('/editproductdescription/:id', upload.none(), [
 
 ], (req, res, next) => {
 
-    var storage = req.body.title;
-
-    var camera = req.body.camera;
+    // var storage = req.body.title;
+    // var camera = req.body.camera;
     var price = req.body.price;
-    var sim = req.body.sim;
-    var size = req.body.size;
+    // var sim = req.body.sim;
+    // var size = req.body.size;
     console.log("EDITED SIZE-----------" + req.body.size);
     var id = req.params.id;
 

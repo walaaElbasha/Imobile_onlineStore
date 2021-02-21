@@ -27,13 +27,20 @@
         </p>
         <div>
           <div class="price float-left"> $ {{this.price}}</div>
-          {{#if ../../checkuser}}
+          <br><br><br>
+          {{#if ../../checkuser}}                 
+             <a href="/productreview/{{this._id}}"
+            class="btn  btn-warning" style="width: 200px;">Show Reviews</a>  
+
           <a href="/addTocart/{{this._id}}/{{this.price}}/{{this.productName}}"
-            class="btn  btn-success float-right">Buy</a>
+            class="btn  btn-success float-right" >Buy</a>
           {{else}}
+             <a href="/productreview/{{this._id}}"
+            class="btn  btn-warning" style="width: 200px;">Show Reviews</a>  
           <button type="button" class="btn  btn-success float-right" data-toggle="modal" data-target="#exampleModalCenter">
             Buy
           </button>
+           
           {{/if}}
 
         </div>
@@ -44,8 +51,6 @@
   {{/each}}
 </div>
 {{/each}}
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -58,7 +63,7 @@
         </button>
       </div>
       <div class="modal-body">
-        ...
+        You Should Sign in To Continue 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

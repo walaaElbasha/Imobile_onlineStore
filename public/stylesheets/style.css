@@ -30,4 +30,14 @@ padding-top: 10px ;
   padding-top: 100px;
 }
 
+.star {
+  font-size: 12px;
+  display: inline-block;
+  color: #FAC451;
+  margin-right: -3px;
+}
 
+hr {
+  border-top: 1px solid red;
+  border-radius: 2px;
+}
